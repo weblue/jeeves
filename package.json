@@ -4,7 +4,8 @@
   "description": "Creator's Guild Butler",
   "main": "\u001b[A\u001b[B",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "jeevesMain.js"
   },
   "repository": {
     "type": "git",
