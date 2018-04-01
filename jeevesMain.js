@@ -140,6 +140,9 @@ client.on('message', msg => {
                 break;
             case `list`:
                 /*
+                 * Ex. !list
+                 *    Lists all projects owned by the requester author.
+                 *
                  * Ex. !list {author}
                  *    Lists all the projects owned by the author.
                  */
