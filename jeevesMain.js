@@ -31,13 +31,14 @@ client.on('ready', () => {
 client.on('message', msg => {
     if (msg.content.startsWith(`${prefix}`)) {
         let strings = msg.content.split(' ');
+        let cmd = strings[0].substring(strings[0].indexOf(prefix) + prefix.length);
 
-        switch (strings[0]) {
-            case `${prefix}ping`:
+        switch (cmd) {
+            case `ping`:
                 msg.reply('pong');
                 console.log(`Sent message: pong to ${msg.author.username}`);
                 break;
-            case `${prefix}add`:
+            case `add`:
                 //Check # of params and check for valid category
                 //Send new project to DB
                 if (strings.length === 4 && validCategory(strings[1])) {
@@ -57,16 +58,16 @@ client.on('message', msg => {
                         .catch(console.error);
                 }
                 break;
-            case `${prefix}delete`:
+            case `delete`:
                 msg.reply('not implemented yet');
                 break;
-            case `${prefix}help` :
+            case `help` :
                 msg.reply('not implemented yet');
                 break;
-            case `${prefix}list`:
+            case `list`:
                 msg.reply('not implemented yet');
                 break;
-            case `${prefix}invite`:
+            case `invite`:
                 msg.reply('not implemented yet');
                 break;
             default:
