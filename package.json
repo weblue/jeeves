@@ -5,7 +5,7 @@
   "main": "\u001b[A\u001b[B",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "jeevesMain.js"
+    "start": "node jeevesMain.js"
   },
   "repository": {
     "type": "git",
