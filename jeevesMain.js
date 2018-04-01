@@ -47,7 +47,9 @@ client.on('message', msg => {
                     });
                     msg.reply('Project added!');
                     //Check role and assign if new project category
-                    msg.member.addRole(findRole(strings[1]), 'Project added in category')
+                    msg.member.addRole(findRole(strings[1]))
+                        .then(msg.author.send('Added new role to your account!'))
+                        .catch((error) => console.log(error));
                 } else {
                     //Send message to user on error
                     msg.author.send(`${randomErrorMessage()} Proper usage: ${prefix}add {category} {name} {url}`)
@@ -84,8 +86,9 @@ let validCategory = function (category) {
         console.log('This fucker just tried to add a moderator project');
         return false;
     }
-    categories.forEach((element) => {if (category === element) return true;});
-    return false;
+    let found = false;
+    categories.forEach((element) => {if (category === element){ found = true;}});
+    return found;
 };
 
 const errorMessages = ['Please stop; you\'re killing me.', 'Error with your input!', 'What the hell are you doing?'
@@ -98,10 +101,17 @@ let randomErrorMessage = function() {
 
 let findRole = function(role) {
     let roles = client.guilds.array()[0].roles.array();
+    let found = null;
     roles.forEach((element) => {
-        if (element.name === roleMap[role])
-            return element.id;
+        if (element.name === roleMap[role]) {
+            found = element;
+        }
     });
-    console.log('Error: role not found');
-    return null;
+    if (found === null) {
+        console.log('Error: role not found');
+        return null;
+    } else {
+
+        return found;
+    }
 };
