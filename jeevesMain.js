@@ -147,7 +147,13 @@ client.on('message', msg => {
              * Ex. !list {author}
              *    Lists all the projects owned by the author.
              */
-            const reqTarget = args.length === 0 ? author : msg.mentions.users.first().id;
+            let reqTarget;
+            if (args.length === 0)
+                reqTarget = author;
+            else if(msg.mentions.users.size === 1)
+                reqTarget = msg.mentions.users.first().id;
+            else
+                return msg.reply(randomErrorMessage() + 'Incorrect usage: !list or !list {@member}');
             console.log(getUserPath(reqTarget));
             database.database()
                 .ref(getUserPath(reqTarget))
