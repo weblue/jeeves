@@ -6,7 +6,7 @@ const fs = require('fs');
 const client = new Discord.Client();
 
 // Config
-const { prefix, firebasetoken, discordtoken } = require('./config.json');
+const { prefix, firebasetoken, discordtoken, dbpass } = require('./config.json');
 
 // Commands
 const commandFiles = fs.readdirSync('./commands');
@@ -53,7 +53,7 @@ function randomErrorMessage() {
 
 // Listeners
 client.on('ready', () => {
-  database.auth().signInWithEmailAndPassword('jeeves@jeeves.com', 'jeeves12').catch(((error) => {
+  database.auth().signInWithEmailAndPassword('jeeves@jeeves.com', dbpass).catch(((error) => {
     console.log(error.message);
   }));
   console.log(`logged in as ${client.user.tag}!`);
