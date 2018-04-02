@@ -59,14 +59,16 @@ client.on('message', msg => {
                 return;
             }
             if (args.length === 3) {
-                database.database().ref(getProjectPath(userPath, category)).push({
-                    name: args[1],
+                const projectName = args[1];
+                const projectUrl = args[2];
+                const projectPath = getProjectPath(getCategoryPath(userPath, category), projectName);
+                database.database().ref(projectPath).set({
                     url: args[2]
                 });
-                msg.reply(`Project '${args[1]}' added to ${category}!`);
+                msg.reply(`Project '${projectName}' added to ${category}!`);
 
                 //Check role and assign if new project category
-                const role = findRole(args[0]);
+                const role = findRole(category);
                 msg.member.addRole(role)
                     .then(msg.author.send('Added new role to your account!'))
                     .catch((error) => console.log(error));
@@ -100,8 +102,10 @@ client.on('message', msg => {
                             snapshot.forEach((categorySnapshot) => {
                                 const category = categorySnapshot.key;
                                 categorySnapshot.forEach((projSnapshot) => {
-                                    const project = projSnapshot.val();
-                                    if (project.name.toLowerCase() === projectName.toLowerCase()) {
+                                    const key = projSnapshot.key;
+                                    console.log('Project: ' + key);
+                                    console.log(projSnapshot.val());
+                                    if (key.toLowerCase() === projectName.toLowerCase()) {
                                         projSnapshot.ref.remove();
                                         console.log(`'${projectName}' deleted from ${category}`);
                                     }
@@ -112,20 +116,18 @@ client.on('message', msg => {
                     break;
                 case 2:
                     const category = validCategory(args[1]);
-                    const projectPath = getProjectPath(userPath, category);
+                    const categoryPath = getCategoryPath(userPath, category);
                     console.log(`Deleting '${projectName}' from ${category}`);
 
                     database.database()
-                        .ref(projectPath)
+                        .ref(categoryPath)
                         .once('value')
                         .then((categorySnapshot) => {
                             categorySnapshot.forEach((projSnapshot) => {
-                                let project = projSnapshot.val();
-                                console.log('Project: ' + project.name);
-                                console.log(project.name.toLowerCase() + " " + projectName.toLowerCase());
-                                if (project.name.toLowerCase() === projectName.toLowerCase()) {
+                                const dbProjName = projSnapshot.key;
+                                if (dbProjName.toLowerCase() === projectName.toLowerCase()) {
                                     projSnapshot.ref.remove();
-                                    msg.reply(`'${projectName}' deleted from ${category}`);
+                                    msg.reply(`'${dbProjName}' deleted from ${category}`);
                                 }
                             });
                         });
@@ -153,24 +155,25 @@ client.on('message', msg => {
                 reqTarget = msg.mentions.users.first().id;
             else
                 return msg.reply(randomErrorMessage() + 'Incorrect usage: !list or !list {@member}');
-            console.log(getUserPath(reqTarget));
-            database.database()
-                .ref(getUserPath(reqTarget))
-                .once('value')
-                .then(function (snapshot) {
-                    let replyString = '';
-                    snapshot.forEach((categorySnapshot) => {
-                        const category = categorySnapshot.key;
-                        replyString += `\t${category}\n`;
-                        categorySnapshot.forEach((projSnapshot) => {
-                            const project = projSnapshot.val();
-                            replyString += `\t\t${project.name} ${project.url}\n`;
+
+                database.database()
+                    .ref(getUserPath(reqTarget))
+                    .once('value')
+                    .then(function (snapshot) {
+                        let replyString = '';
+                        console.log(snapshot.val());
+                        snapshot.forEach((categorySnapshot) => {
+                            const category = categorySnapshot.key;
+                            replyString += `\t${category}\n`;
+                            categorySnapshot.forEach((projSnapshot) => {
+                                const project = projSnapshot.val();
+                                replyString += `\t\t${project.name} ${project.url}\n`;
+                            });
                         });
+                        msg.author
+                            .send(`Projects:\n${replyString}`)
+                            .then(message => console.log(`Sent message: ${message.content} to ${msg.author.username}`))
                     });
-                    msg.author
-                        .send(`Projects:\n${replyString}`)
-                        .then(message => console.log(`Sent message: ${message.content} to ${msg.author.username}`))
-                });
 
             break;
         case `invite`:
@@ -213,8 +216,12 @@ let getUserPath = function (user) {
     return `users/${user}`;
 }
 
-let getProjectPath = function (userPath, category) {
+let getCategoryPath = function (userPath, category) {
     return `${userPath}/${category}`;
+}
+
+let getProjectPath = function (categoryPath, projectName) {
+    return `${categoryPath}/${projectName}`;
 }
 
 const errorMessages = ['Please stop; you\'re killing me.', 'Error with your input!', 'What the hell are you doing?'
