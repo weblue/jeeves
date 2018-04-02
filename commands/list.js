@@ -4,7 +4,7 @@ module.exports = {
     name: 'list',
     description: 'Lists all projects by specified user or by message author',
     usage: `${main.prefix}list\n Lists all projects owned by the author. or\n 
-            ${main.prefix}list @{author}\n Lists all projects owned by @'d user`,
+            ${main.prefix}list @{member}\n Lists all projects owned by @'d user`,
     execute(msg) {
         /*
              * Ex. !list
@@ -19,7 +19,7 @@ module.exports = {
         else if(msg.mentions.users.size === 1)
             reqTarget = msg.mentions.users.first().id;
         else
-            throw msg.reply(main.randomErrorMessage() + 'Incorrect usage: !list or !list {@member}');
+            throw msg.reply('Usage: ' + this.usage);
 
         database.database()
             .ref(main.getUserPath(reqTarget))
