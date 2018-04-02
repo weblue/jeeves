@@ -1,0 +1,10 @@
+{
+  "extends": "airbnb",
+  "rules": {
+    "import/no-dynamic-require": "false",
+    "quote-props":"off",
+    "global-require": "off",
+    //TODO remove console calls for logger
+    "no-console": "off"
+  }
+}
