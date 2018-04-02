@@ -16,9 +16,6 @@ module.exports = {
         const projectName = args[0];
         const userPath = main.getUserPath(msg.author);
         switch (args.length) {
-            case 0:
-                // TODO: Print usage of delete
-                break;
             case 1:
                 console.log(`Deleting '${projectName}' from ALL categories`);
 
@@ -61,7 +58,7 @@ module.exports = {
 
                 break;
             default:
-                msg.reply('not implemented yet');
+                throw 'Usage: ' + this.usage;
         }
     },
 };

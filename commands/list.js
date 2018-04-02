@@ -19,7 +19,7 @@ module.exports = {
         else if(msg.mentions.users.size === 1)
             reqTarget = msg.mentions.users.first().id;
         else
-            return msg.reply(main.randomErrorMessage() + 'Incorrect usage: !list or !list {@member}');
+            throw msg.reply(main.randomErrorMessage() + 'Incorrect usage: !list or !list {@member}');
 
         database.database()
             .ref(main.getUserPath(reqTarget))

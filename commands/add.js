@@ -15,8 +15,7 @@ module.exports = {
         const userPath = main.getUserPath(msg.author);
         const category = main.validCategory(args[0]);
         if (category === null) {
-            msg.reply(`Invalid category '${category}'`);
-            return;
+            throw `Invalid category '${category}'`;
         }
         if (args.length === 3) {
             const projectName = args[1];
@@ -34,9 +33,7 @@ module.exports = {
                 .catch((error) => console.log(error));
         } else {
             //Send message to user on error
-            msg.author.send(`${main.randomErrorMessage()} Proper usage: ${main.prefix}add {category} {name} {url}`)
-                .then(message => console.log(`Sent message: ${message.content} to ${msg.author.username}`))
-                .catch(console.error);
+            throw 'Usage: ' + this.usage;
         }
     },
 };

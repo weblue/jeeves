@@ -59,9 +59,8 @@ client.on('message', msg => {
     try {
         client.commands.get(cmd).execute(message, args);
     } catch (error) {
-        console.error('command_exec_error: ' + error);
-        msg.reply(randomErrorMessage() + '\nUsage: '
-            + !client.commands.get(cmd).usage ? client.commands.get(cmd).usage : 'no usage defined')
+        console.error(msg.author + 'triggered a command_exec_error: ' + error);
+        msg.author.send(randomErrorMessage() + error);
     }
         // case `help` :
         //     msg.reply('not implemented yet');
@@ -86,10 +85,6 @@ let validCategory = function (category) {
         }
     }
     return null;
-};
-
-let getAllProjectPath = function (userPath, projectName) {
-    return getProjectPath(userPath, '${category}');
 };
 
 let getUserPath = function (user) {
