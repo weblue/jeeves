@@ -14,24 +14,25 @@ module.exports = {
              *     Deletes from input category.
              */
         const projectName = args[0];
-        const author = msg.author.id;
-        console.log('Args: ' + args.length);
+        const userPath = main.getUserPath(msg.author);
         switch (args.length) {
-            case 1:
+            case 0:
                 // TODO: Print usage of delete
                 break;
-            case 2:
+            case 1:
                 console.log(`Deleting '${projectName}' from ALL categories`);
 
                 database.database()
-                    .ref(main.getUserPath(author))
+                    .ref(userPath)
                     .once('value')
                     .then(function (snapshot) {
                         snapshot.forEach((categorySnapshot) => {
                             const category = categorySnapshot.key;
                             categorySnapshot.forEach((projSnapshot) => {
-                                const project = projSnapshot.val();
-                                if (project.name.toLowerCase() === projectName.toLowerCase()) {
+                                const key = projSnapshot.key;
+                                console.log('Project: ' + key);
+                                console.log(projSnapshot.val());
+                                if (key.toLowerCase() === projectName.toLowerCase()) {
                                     projSnapshot.ref.remove();
                                     console.log(`'${projectName}' deleted from ${category}`);
                                 }
@@ -40,22 +41,20 @@ module.exports = {
                         msg.reply(`'${projectName}' OBLITERATED!`);
                     });
                 break;
-            case 3:
+            case 2:
                 const category = main.validCategory(args[1]);
-                const projectPath = main.getProjectPath(main.getUserPath(author), category);
+                const categoryPath = main.getCategoryPath(userPath, category);
                 console.log(`Deleting '${projectName}' from ${category}`);
 
                 database.database()
-                    .ref(projectPath)
+                    .ref(categoryPath)
                     .once('value')
                     .then((categorySnapshot) => {
                         categorySnapshot.forEach((projSnapshot) => {
-                            let project = projSnapshot.val();
-                            console.log('Project: ' + project.name);
-                            console.log(project.name.toLowerCase() + " " + projectName.toLowerCase());
-                            if (project.name.toLowerCase() === projectName.toLowerCase()) {
+                            const dbProjName = projSnapshot.key;
+                            if (dbProjName.toLowerCase() === projectName.toLowerCase()) {
                                 projSnapshot.ref.remove();
-                                msg.reply(`'${projectName}' deleted from ${category}`);
+                                msg.reply(`'${dbProjName}' deleted from ${category}`);
                             }
                         });
                     });

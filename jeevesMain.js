@@ -63,134 +63,16 @@ client.on('message', msg => {
 
             break;
         case `add`:
-            /*
-             * Ex. !add {category} {project_name} {website_link}
-             *
-             * - Check # of params and validate category
-             * - Send new project to DB
-             */
-            console.log(`Adding ${args[1]}`);
-            const category = validCategory(args[0]);
-            if (category === null) {
-                msg.reply(`Invalid category '${category}'`);
-                return;
-            }
-            if (args.length === 3) {
-                const projectName = args[1];
-                const projectUrl = args[2];
-                const projectPath = getProjectPath(getCategoryPath(userPath, category), projectName);
-                database.database().ref(projectPath).set({
-                    url: args[2]
-                });
-                msg.reply(`Project '${projectName}' added to ${category}!`);
 
-                //Check role and assign if new project category
-                const role = findRole(category);
-                msg.member.addRole(role)
-                    .then(msg.author.send('Added new role to your account!'))
-                    .catch((error) => console.log(error));
-            } else {
-                //Send message to user on error
-                msg.author.send(`${randomErrorMessage()} Proper usage: ${prefix}add {category} {name} {url}`)
-                    .then(message => console.log(`Sent message: ${message.content} to ${msg.author.username}`))
-                    .catch(console.error);
-            }
             break;
         case `delete`:
-            /*
-             * Ex. !delete {project_name}
-             *     Deletes from all categories.
-             *
-             * Ex. !delete {project_name} {category}
-             *     Deletes from input category.
-             */
-            const projectName = args[0];
-            switch (args.length) {
-                case 0:
-                    // TODO: Print usage of delete
-                    break;
-                case 1:
-                    console.log(`Deleting '${projectName}' from ALL categories`);
 
-                    database.database()
-                        .ref(userPath)
-                        .once('value')
-                        .then(function (snapshot) {
-                            snapshot.forEach((categorySnapshot) => {
-                                const category = categorySnapshot.key;
-                                categorySnapshot.forEach((projSnapshot) => {
-                                    const key = projSnapshot.key;
-                                    console.log('Project: ' + key);
-                                    console.log(projSnapshot.val());
-                                    if (key.toLowerCase() === projectName.toLowerCase()) {
-                                        projSnapshot.ref.remove();
-                                        console.log(`'${projectName}' deleted from ${category}`);
-                                    }
-                                });
-                            });
-                            msg.reply(`'${projectName}' OBLITERATED!`);
-                        });
-                    break;
-                case 2:
-                    const category = validCategory(args[1]);
-                    const categoryPath = getCategoryPath(userPath, category);
-                    console.log(`Deleting '${projectName}' from ${category}`);
-
-                    database.database()
-                        .ref(categoryPath)
-                        .once('value')
-                        .then((categorySnapshot) => {
-                            categorySnapshot.forEach((projSnapshot) => {
-                                const dbProjName = projSnapshot.key;
-                                if (dbProjName.toLowerCase() === projectName.toLowerCase()) {
-                                    projSnapshot.ref.remove();
-                                    msg.reply(`'${dbProjName}' deleted from ${category}`);
-                                }
-                            });
-                        });
-
-                    break;
-                default:
-                    msg.reply('not implemented yet');
-            }
             break;
         case `help` :
             msg.reply('not implemented yet');
             break;
         case `list`:
-            /*
-             * Ex. !list
-             *    Lists all projects owned by the requester author.
-             *
-             * Ex. !list {author}
-             *    Lists all the projects owned by the author.
-             */
-            let reqTarget;
-            if (args.length === 0)
-                reqTarget = author;
-            else if(msg.mentions.users.size === 1)
-                reqTarget = msg.mentions.users.first().id;
-            else
-                return msg.reply(randomErrorMessage() + 'Incorrect usage: !list or !list {@member}');
 
-                database.database()
-                    .ref(getUserPath(reqTarget))
-                    .once('value')
-                    .then(function (snapshot) {
-                        let replyString = '';
-                        console.log(snapshot.val());
-                        snapshot.forEach((categorySnapshot) => {
-                            const category = categorySnapshot.key;
-                            replyString += `\t${category}\n`;
-                            categorySnapshot.forEach((projSnapshot) => {
-                                const project = projSnapshot.val();
-                                replyString += `\t\t${project.name} ${project.url}\n`;
-                            });
-                        });
-                        msg.author
-                            .send(`Projects:\n${replyString}`)
-                            .then(message => console.log(`Sent message: ${message.content} to ${msg.author.username}`))
-                    });
 
             break;
         case `invite`:
@@ -206,7 +88,7 @@ client.on('message', msg => {
     }
 });
 
-client.login(discordtoken);
+client.login(discordtoken).then((token) => {console.debug(token)});
 
 //Helpers
 
@@ -227,19 +109,19 @@ let validCategory = function (category) {
 
 let getAllProjectPath = function (userPath, projectName) {
     return getProjectPath(userPath, '${category}');
-}
+};
 
 let getUserPath = function (user) {
     return `users/${user}`;
-}
+};
 
 let getCategoryPath = function (userPath, category) {
     return `${userPath}/${category}`;
-}
+};
 
 let getProjectPath = function (categoryPath, projectName) {
     return `${categoryPath}/${projectName}`;
-}
+};
 
 const errorMessages = ['Please stop; you\'re killing me.', 'Error with your input!', 'What the hell are you doing?'
 ];
@@ -273,4 +155,5 @@ module.exports = {
     getProjectPath,
     validCategory,
     getUserPath,
+    getCategoryPath
 };
