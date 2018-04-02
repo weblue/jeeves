@@ -55,37 +55,18 @@ client.on('message', msg => {
     let args = msg.content.slice(prefix.length).split(/ +/);
     const cmd = args.shift().toLowerCase();
 
-
-
-    switch (cmd) {
-
-        case `ping`:
-
-            break;
-        case `add`:
-
-            break;
-        case `delete`:
-
-            break;
-        case `help` :
-            msg.reply('not implemented yet');
-            break;
-        case `list`:
-
-
-            break;
-        case `invite`:
-            msg.reply('not implemented yet');
-            break;
-        case `author`:
-
-            break;
-        default:
-            msg.author.send(`${randomErrorMessage()} That's not a command!`)
-                .then(message => console.log(`Sent message: ${message.content} to ${msg.author.username}`))
-                .catch(console.error)
+    if (!client.commands.has(cmd)) return msg.reply(`${randomErrorMessage()} That's not a command!`);
+    try {
+        client.commands.get(cmd).execute(message, args);
+    } catch (error) {
+        console.error('command_exec_error: ' + error);
+        msg.reply(randomErrorMessage() + '\nUsage: '
+            + !client.commands.get(cmd).usage ? client.commands.get(cmd).usage : 'no usage defined')
     }
+        // case `help` :
+        //     msg.reply('not implemented yet');
+        // case `invite`:
+        //     msg.reply('not implemented yet');
 });
 
 client.login(discordtoken).then((token) => {console.debug(token)});
