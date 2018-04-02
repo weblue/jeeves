@@ -20,12 +20,13 @@ module.exports = {
             reqTarget = msg.mentions.users.first().id;
         else
             return msg.reply(main.randomErrorMessage() + 'Incorrect usage: !list or !list {@member}');
-        console.log(main.getUserPath(reqTarget));
+
         database.database()
             .ref(main.getUserPath(reqTarget))
             .once('value')
             .then(function (snapshot) {
                 let replyString = '';
+                console.log(snapshot.val());
                 snapshot.forEach((categorySnapshot) => {
                     const category = categorySnapshot.key;
                     replyString += `\t${category}\n`;
