@@ -33,7 +33,7 @@ client.on('message', msg => {
 
     console.log(`Processing: ${msg}`);
 
-    let args = msg.content.slice(prefix.length).split(' ');
+    let args = msg.content.slice(prefix.length).split(/ +/);
     const cmd = args.shift().toLowerCase();
 
     const author = msg.author.id;
@@ -86,12 +86,11 @@ client.on('message', msg => {
              *     Deletes from input category.
              */
             const projectName = args[0];
-            console.log('Args: ' + args.length);
             switch (args.length) {
-                case 1:
+                case 0:
                     // TODO: Print usage of delete
                     break;
-                case 2:
+                case 1:
                     console.log(`Deleting '${projectName}' from ALL categories`);
 
                     database.database()
@@ -111,7 +110,7 @@ client.on('message', msg => {
                             msg.reply(`'${projectName}' OBLITERATED!`);
                         });
                     break;
-                case 3:
+                case 2:
                     const category = validCategory(args[1]);
                     const projectPath = getProjectPath(userPath, category);
                     console.log(`Deleting '${projectName}' from ${category}`);
