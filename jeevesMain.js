@@ -9,7 +9,7 @@ const { prefix, firebasetoken, discordtoken } = require('./config.json');
 //Commands
 const commandFiles = fs.readdirSync('./commands');
 commandFiles.forEach((ele) => {
-    const command = require(`./commands/${file}`);
+    const command = require(`./commands/${ele}`);
 
     client.commands.set(command.name, command);
 });
