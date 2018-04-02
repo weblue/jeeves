@@ -147,12 +147,13 @@ client.on('message', msg => {
              * Ex. !list {author}
              *    Lists all the projects owned by the author.
              */
-            const reqAuthor = args.length === 0 ? author : args[0];
+            const reqTarget = args.length === 0 ? author : msg.mentions.users.first().id;
+            console.log(getUserPath(reqTarget));
             database.database()
-                .ref(getUserPath(reqAuthor))
+                .ref(getUserPath(reqTarget))
                 .once('value')
                 .then(function (snapshot) {
-                    let replyString = "";
+                    let replyString = '';
                     snapshot.forEach((categorySnapshot) => {
                         const category = categorySnapshot.key;
                         replyString += `\t${category}\n`;
