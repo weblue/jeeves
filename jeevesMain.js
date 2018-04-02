@@ -146,12 +146,19 @@ client.on('message', msg => {
              * Ex. !list {author}
              *    Lists all the projects owned by the author.
              */
-            const reqAuthor = args.length === 0 ? author : args[0];
+            let reqTarget;
+            if (args.length === 0)
+                reqTarget = author;
+            else if(msg.mentions.users.size === 1)
+                reqTarget = msg.mentions.users.first().id;
+            else
+                return msg.reply(randomErrorMessage() + 'Incorrect usage: !list or !list {@member}');
+            console.log(getUserPath(reqTarget));
             database.database()
-                .ref(getUserPath(reqAuthor))
+                .ref(getUserPath(reqTarget))
                 .once('value')
                 .then(function (snapshot) {
-                    let replyString = "";
+                    let replyString = '';
                     snapshot.forEach((categorySnapshot) => {
                         const category = categorySnapshot.key;
                         replyString += `\t${category}\n`;
