@@ -11,14 +11,13 @@ const {
 } = require('./config.json');
 
 // Commands
+client.commands = new Discord.Collection();
 const commandFiles = fs.readdirSync('./commands');
 commandFiles.forEach((ele) => {
   const command = require(`./commands/${ele}`);
 
   client.commands.set(command.name, command);
 });
-client.commands = new Discord.Collection();
-
 
 // Database
 const database = firebase.initializeApp({
