@@ -6,7 +6,9 @@ const fs = require('fs');
 const client = new Discord.Client();
 
 // Config
-const { prefix, firebasetoken, discordtoken, dbpass } = require('./config.json');
+const {
+  prefix, firebasetoken, discordtoken, dbpass,
+} = require('./config.json');
 
 // Commands
 const commandFiles = fs.readdirSync('./commands');
@@ -79,8 +81,6 @@ client.on('message', (msg) => {
   }
   // case `help` :
   //     msg.reply('not implemented yet');
-  // case `invite`:
-  //     msg.reply('not implemented yet');
 });
 
 client.login(discordtoken).then((token) => {
@@ -134,10 +134,10 @@ function findRole(role) {
 
 module.exports = {
   prefix,
+  database,
   findRole,
   getProjectPath,
   validCategory,
   getUserPath,
   getCategoryPath,
-  database,
 };
