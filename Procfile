@@ -1,1 +1,1 @@
-web: node jeevesMain.js
+worker: node jeevesMain.js
