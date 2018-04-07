@@ -2,12 +2,13 @@
 const Discord = require('discord.js');
 const firebase = require('firebase');
 const fs = require('fs');
+const ws = require('./webServer');
 
 const client = new Discord.Client();
 
 // Config
 const {
-  prefix, firebasetoken, discordtoken, dbpass,
+  prefix, firebasetoken, discordtoken, dbpass, port
 } = require('./config.json');
 
 // Commands
@@ -131,6 +132,9 @@ function findRole(role) {
   return found;
 }
 
+// Start up web server
+ws.execute();
+
 module.exports = {
   prefix,
   database,
@@ -139,4 +143,6 @@ module.exports = {
   validCategory,
   getUserPath,
   getCategoryPath,
+  categories,
+  port,
 };
