@@ -5,6 +5,8 @@
     "quote-props":"off",
     "global-require": "off",
     //TODO remove console calls for logger
-    "no-console": "off"
+    "no-console": "off",
+    "prefer-destructuring": ["off"],
+    "no-trailing-spaces": ["off"]
   }
 }
