@@ -142,5 +142,4 @@ module.exports = {
   getUserPath,
   getCategoryPath,
   categories,
-  port,
 };
