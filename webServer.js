@@ -1,7 +1,8 @@
-const main = require('./jeevesMain');
 const http = require('http');
 
-const port = main.port;
+const port = 3000;
+
+console.log(port);
 
 const requestHandler = (request, response) => {
   response.end('Hello world');

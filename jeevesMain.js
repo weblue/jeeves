@@ -8,7 +8,7 @@ const client = new Discord.Client();
 
 // Config
 const {
-  prefix, firebasetoken, discordtoken, dbpass, port
+  prefix, firebasetoken, discordtoken, dbpass, port,
 } = require('./config.json');
 
 // Commands
@@ -79,8 +79,6 @@ client.on('message', (msg) => {
       msg.author.send(randomErrorMessage() + error);
     }
   }
-  // case `help` :
-  //     msg.reply('not implemented yet');
 });
 
 client.login(discordtoken).then((token) => {
@@ -133,7 +131,7 @@ function findRole(role) {
 }
 
 // Start up web server
-ws.execute();
+setTimeout(() => { ws.execute(); }, 100);
 
 module.exports = {
   prefix,
