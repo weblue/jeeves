@@ -10,6 +10,15 @@ const {
   prefix, firebasetoken, discordtoken, dbpass,
 } = require('./config.json');
 
+// Commands
+client.commands = new Discord.Collection();
+const commandFiles = fs.readdirSync('./commands');
+commandFiles.forEach((ele) => {
+  const command = require(`./commands/${ele}`);
+
+  client.commands.set(command.name, command);
+});
+
 // Database
 const database = firebase.initializeApp({
   apiKey: firebasetoken,
@@ -42,6 +51,34 @@ function randomErrorMessage() {
   const index = Math.floor(Math.random() * errorMessages.length);
   return errorMessages[index];
 }
+
+// Listeners
+client.on('ready', () => {
+  database.auth().signInWithEmailAndPassword('jeeves@jeeves.com', dbpass).catch(((error) => {
+    console.log(error.message);
+  }));
+  console.log(`logged in as ${client.user.tag}!`);
+});
+
+client.on('message', (msg) => {
+  if (!msg.content.startsWith(prefix) || msg.author.bot) return;
+
+  console.log(`Processing: ${msg}`);
+
+  const args = msg.content.slice(prefix.length).split(/ +/);
+  const cmd = args.shift().toLowerCase();
+
+  if (!client.commands.has(cmd)) {
+    msg.reply(`${randomErrorMessage()} That's not a command!`);
+  } else {
+    try {
+      client.commands.get(cmd).execute(msg, args);
+    } catch (error) {
+      console.error(`${msg.author}triggered a command_exec_error: ${error}`);
+      msg.author.send(randomErrorMessage() + error);
+    }
+  }
+});
 
 // Helpers
 
@@ -87,43 +124,6 @@ function findRole(role) {
   }
   return found;
 }
-
-// Commands
-client.commands = new Discord.Collection();
-const commandFiles = fs.readdirSync('./commands');
-commandFiles.forEach((ele) => {
-  const command = require(`./commands/${ele}`);
-
-  client.commands.set(command.name, command);
-});
-
-// Listeners
-client.on('ready', () => {
-  database.auth().signInWithEmailAndPassword('jeeves@jeeves.com', dbpass).catch(((error) => {
-    console.log(error.message);
-  }));
-  console.log(`logged in as ${client.user.tag}!`);
-});
-
-client.on('message', (msg) => {
-  if (!msg.content.startsWith(prefix) || msg.author.bot) return;
-
-  console.log(`Processing: ${msg}`);
-
-  const args = msg.content.slice(prefix.length).split(/ +/);
-  const cmd = args.shift().toLowerCase();
-
-  if (!client.commands.has(cmd)) {
-    msg.reply(`${randomErrorMessage()} That's not a command!`);
-  } else {
-    try {
-      client.commands.get(cmd).execute(msg, args);
-    } catch (error) {
-      console.error(`${msg.author}triggered a command_exec_error: ${error}`);
-      msg.author.send(randomErrorMessage() + error);
-    }
-  }
-});
 
 client.login(discordtoken);
 
