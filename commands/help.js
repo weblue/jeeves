@@ -23,8 +23,9 @@ module.exports = {
     if (args.length === 0) {
       let replyString = '';
       commands.forEach((command) => {
-        if(command.name)
+        if (command.name) {
           replyString += `**${main.prefix}${command.name}**: ${command.description} \nUsage: ${command.usage}\n\n`;
+        }
       });
 
       msg.author.send(replyString);
