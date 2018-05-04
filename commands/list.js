@@ -22,14 +22,13 @@ module.exports = {
         console.log(snapshot.val());
         snapshot.forEach((categorySnapshot) => {
           const category = categorySnapshot.key;
-          replyString += `\t**${category.charAt(0).toUpperCase()}**\n`;
+          replyString += `\t**${category}**\n`;
           categorySnapshot.forEach((projSnapshot) => {
-            const project = projSnapshot.val();
-            replyString += `\t\t${project.name} ${project.url}\n`;
+            replyString += `\t\t*${projSnapshot.key}*: ${projSnapshot.val().url}\n`;
           });
         });
         msg.author
-          .send(`Projects:\n${replyString}`)
+          .send(`${reqTarget.username}'s projects:\n${replyString}`)
           .then(message => console.log(`Sent message: ${message.content} to ${msg.author.username}`));
       });
   },
