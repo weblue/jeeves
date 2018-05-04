@@ -3,8 +3,7 @@ const main = require('../jeevesMain');
 module.exports = {
   name: 'list',
   description: 'Lists all projects by specified user or by message author',
-  usage: `${main.prefix}list\n Lists all projects owned by the author. or\n 
-            ${main.prefix}list @{member}\n Lists all projects owned by @'d user`,
+  usage: `${main.prefix}list\nLists all projects owned by the author or\n${main.prefix}list @{member}\nLists all projects owned by @'d user`,
   execute(msg, args) {
     /** Ex. !list
      *    Lists all projects owned by the requester author.
@@ -23,7 +22,7 @@ module.exports = {
         console.log(snapshot.val());
         snapshot.forEach((categorySnapshot) => {
           const category = categorySnapshot.key;
-          replyString += `\t${category}\n`;
+          replyString += `\t**${category.charAt(0).toUpperCase()}**\n`;
           categorySnapshot.forEach((projSnapshot) => {
             const project = projSnapshot.val();
             replyString += `\t\t${project.name} ${project.url}\n`;

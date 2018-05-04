@@ -10,15 +10,6 @@ const {
   prefix, firebasetoken, discordtoken, dbpass,
 } = require('./config.json');
 
-// Commands
-client.commands = new Discord.Collection();
-const commandFiles = fs.readdirSync('./commands');
-commandFiles.forEach((ele) => {
-  const command = require(`./commands/${ele}`);
-
-  client.commands.set(command.name, command);
-});
-
 // Database
 const database = firebase.initializeApp({
   apiKey: firebasetoken,
@@ -42,9 +33,9 @@ const roleMap = {
 
 // Helpers
 const errorMessages =
-  ['Please stop; you\'re killing me.',
-    'Error with your input!',
-    'What the hell are you doing?',
+  ['Please stop; you\'re killing me. ',
+    'Error with your input! ',
+    'What the hell are you doing? ',
   ];
 
 function randomErrorMessage() {
@@ -63,7 +54,7 @@ client.on('ready', () => {
 client.on('message', (msg) => {
   if (!msg.content.startsWith(prefix) || msg.author.bot) return;
 
-  console.log(`Processing: ${msg}`);
+  console.log(`Processing: "${msg}" from ${msg.author.username}`);
 
   const args = msg.content.slice(prefix.length).split(/ +/);
   const cmd = args.shift().toLowerCase();
@@ -74,7 +65,7 @@ client.on('message', (msg) => {
     try {
       client.commands.get(cmd).execute(msg, args);
     } catch (error) {
-      console.error(`${msg.author}triggered a command_exec_error: ${error}`);
+      console.error(`${msg.author.username} triggered a command_exec_error: ${error}`);
       msg.author.send(randomErrorMessage() + error);
     }
   }
@@ -84,7 +75,7 @@ client.on('message', (msg) => {
 
 function validCategory(category) {
   console.log(`validating category: ${category}`);
-  if (category === 'Moderator') {
+  if (category.toLowerCase() === 'moderator') {
     console.log('This fucker just tried to add a moderator project');
     return null;
   }
@@ -125,8 +116,6 @@ function findRole(role) {
   return found;
 }
 
-client.login(discordtoken);
-
 module.exports = {
   prefix,
   database,
@@ -137,3 +126,14 @@ module.exports = {
   getCategoryPath,
   categories,
 };
+
+// Commands
+client.commands = new Discord.Collection();
+const commandFiles = fs.readdirSync('./commands');
+commandFiles.forEach((ele) => {
+  const command = require(`./commands/${ele}`);
+
+  client.commands.set(command.name, command);
+});
+
+client.login(discordtoken).catch((err) => { console.log(err.message); });
