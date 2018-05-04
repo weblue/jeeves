@@ -34,8 +34,7 @@ function checkAndRemoveOnLastProject(msg) {
 module.exports = {
   name: 'delete',
   description: 'Delete project from database',
-  usage: `${main.prefix}delete {project_name}\n Deletes from all categories or
-            \n ${main.prefix}delete {project_name} {category}\n Deletes from specified category`,
+  usage: `${main.prefix}delete {project_name}\nDeletes from all categories or\n${main.prefix}delete {project_name} {category}\nDeletes from specified category`,
   execute(msg, args) {
     /** Ex. !delete {project_name}
      *     Deletes from all categories.
