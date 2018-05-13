@@ -3,7 +3,7 @@ const Discord = require('discord.js');
 const firebase = require('firebase');
 const fs = require('fs');
 
-const client = new Discord.Client();
+const client = new Discord.Client({autoReconnect:true});
 
 // Config
 const {
