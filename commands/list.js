@@ -26,7 +26,7 @@ module.exports = {
       .then((snapshot) => {
         let replyString = '';
           if (!snapshot.exists()) {
-              msg.author
+              msg
                   .reply(`${msg.mentions.users.first().username} has no projects!`)
                   .then(message => console.log(`Sent message: ${message.content} to ${msg.author.username}`));
           } else {
@@ -38,7 +38,7 @@ module.exports = {
                       replyString += `\t\t*${projSnapshot.key}*: ${projSnapshot.val().url}\n`;
                   });
               });
-              msg.author
+              msg
                   .reply(`${msg.mentions.users.first().username}'s projects:\n${replyString}`)
                   .then(message => console.log(`Sent message: ${message.content} to ${msg.author.username}`));
           }
