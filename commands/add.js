@@ -13,9 +13,9 @@ module.exports = {
              */
     if (args.length !== 0) {
       console.log(`Adding ${args[1]}`);
-      const userPath = main.getUserPath(msg.author);
+      const userPath = main.getUserPath(msg.author.id);
       const category = main.validCategory(args[0]);
-      if (category === null) {
+      if (category == null) {
         throw new Error(`Invalid category '${category}'`);
       }
       if (args.length === 3) {
