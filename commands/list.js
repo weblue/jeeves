@@ -27,7 +27,7 @@ module.exports = {
         let replyString = '';
           if (!snapshot.exists()) {
               msg.author
-                  .send(`${reqTarget.username} has no projects!`)
+                  .send(`${msg.mentions.users.first().username} has no projects!`)
                   .then(message => console.log(`Sent message: ${message.content} to ${msg.author.username}`));
           } else {
               console.log(snapshot.val());
