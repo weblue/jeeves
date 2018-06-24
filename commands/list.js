@@ -20,8 +20,6 @@ module.exports = {
         throw msg.reply(`Usage: ${this.usage}`);
     }
 
-    console.log(reqTarget.id);
-
     main.database.database()
       .ref(main.getUserPath(reqTarget.id))
       .once('value')
