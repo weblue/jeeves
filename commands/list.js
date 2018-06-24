@@ -38,9 +38,9 @@ module.exports = {
                       replyString += `\t\t*${projSnapshot.key}*: ${projSnapshot.val().url}\n`;
                   });
               });
-              msg
-                  .reply(`${msg.mentions.users.first().username}'s projects:\n${replyString}`)
+              msg.reply(`${msg.mentions.users.first().username}'s projects:\n${replyString}`)
                   .then(message => console.log(`Sent message: ${message.content} to ${msg.author.username}`));
+              console.log('what')
           }
       });
   },

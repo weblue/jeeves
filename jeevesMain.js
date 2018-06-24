@@ -65,8 +65,8 @@ client.on('message', (msg) => {
     try {
       client.commands.get(cmd).execute(msg, args);
     } catch (error) {
-      console.error(`${msg.author.username} triggered a command_exec_error: ${error}`);
-      msg.author.send(randomErrorMessage() + error);
+      console.error(`${msg.author.username} triggered a command_exec_error: ${error.message}`);
+      msg.author.send(randomErrorMessage() + error.message);
     }
   }
 });
