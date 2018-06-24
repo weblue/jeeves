@@ -13,7 +13,7 @@ module.exports = {
      */
     let reqTarget;
     if (args.length === 0) {
-        reqTarget = msg.author;
+        reqTarget = msg.author.id;
     } else if (msg.mentions.users.size === 1) {
         reqTarget = msg.mentions.users.first().id;
     } else {
