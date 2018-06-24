@@ -13,21 +13,20 @@ module.exports = {
      */
     let reqTarget;
     if (args.length === 0) {
-        reqTarget = msg.author.id;
+        reqTarget = msg.author;
     } else if (msg.mentions.users.size === 1) {
-        reqTarget = msg.mentions.users.first().id;
+        reqTarget = msg.mentions.users.first();
     } else {
         throw msg.reply(`Usage: ${this.usage}`);
     }
 
     main.database.database()
-      .ref(main.getUserPath(reqTarget))
+      .ref(main.getUserPath(reqTarget.id))
       .once('value')
       .then((snapshot) => {
         let replyString = '';
           if (!snapshot.exists()) {
-              msg
-                  .reply(`${msg.mentions.users.first().username} has no projects!`)
+              msg.reply(`${reqTarget.username} has no projects!`)
                   .then(message => console.log(`Sent message: ${message.content} to ${msg.author.username}`));
           } else {
               console.log(snapshot.val());
@@ -38,9 +37,8 @@ module.exports = {
                       replyString += `\t\t*${projSnapshot.key}*: ${projSnapshot.val().url}\n`;
                   });
               });
-              msg.reply(`${msg.mentions.users.first().username}'s projects:\n${replyString}`)
+              msg.reply(`${reqTarget.username}'s projects:\n${replyString}`)
                   .then(message => console.log(`Sent message: ${message.content} to ${msg.author.username}`));
-              console.log('what')
           }
       });
   },
