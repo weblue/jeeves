@@ -35,7 +35,7 @@ const roleMap = {
 const errorMessages =
   ['Please stop; you\'re killing me. ',
     'Error with your input! ',
-    'What the hell are you doing? ',
+    'What are you doing? ',
   ];
 
 function randomErrorMessage() {
