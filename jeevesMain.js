@@ -71,6 +71,9 @@ client.on('message', (msg) => {
   }
 });
 
+client.on("error", (e) => console.error(e));
+client.on("warn", (e) => console.warn(e));
+
 // Helpers
 
 function validCategory(category) {
@@ -136,4 +139,4 @@ commandFiles.forEach((ele) => {
   client.commands.set(command.name, command);
 });
 
-client.login(discordtoken).catch((err) => { console.log(err.message); });
+client.login(discordtoken);
