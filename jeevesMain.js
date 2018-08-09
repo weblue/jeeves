@@ -71,11 +71,7 @@ client.on('message', (msg) => {
   }
 });
 
-client.on("error", (e) => console.error(e));
-client.on("warn", (e) => console.warn(e));
-
 // Helpers
-
 function validCategory(category) {
   console.log(`validating category: ${category}`);
   if (category.toLowerCase() === 'moderator') {
@@ -141,4 +137,4 @@ commandFiles.forEach((ele) => {
 
 client.login(discordtoken).then(() => {
     client.user.setPresence({status: 'online', game: {name: ', Watching'}});
-});;
+});
