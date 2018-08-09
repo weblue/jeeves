@@ -135,6 +135,7 @@ commandFiles.forEach((ele) => {
   client.commands.set(command.name, command);
 });
 
-client.login(discordtoken).then(() => {
-    client.user.setPresence({status: 'online', game: {name: ', Watching'}});
-});
+client.on("error", (e) => console.error(e));
+client.on("warn", (e) => console.warn(e));
+
+client.login(discordtoken);
